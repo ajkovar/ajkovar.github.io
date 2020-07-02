@@ -31,3 +31,4 @@ exclude:
   - Gemfile
   - Gemfile.lock
 google_analytics: UA-12240972-1
+show_excerpts: true
