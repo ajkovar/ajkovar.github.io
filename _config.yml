@@ -25,6 +25,7 @@ github_username:  ajkovar
 # Build settings
 markdown: kramdown
 theme: plainwhite
+remote_theme: thelehhman/plainwhite-jekyll # For github pages
 gems:
   - jekyll-feed
 exclude:
