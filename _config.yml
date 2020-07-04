@@ -24,7 +24,7 @@ github_username:  ajkovar
 
 # Build settings
 markdown: kramdown
-theme: minima
+theme: plainwhite
 gems:
   - jekyll-feed
 exclude:
@@ -32,3 +32,11 @@ exclude:
   - Gemfile.lock
 google_analytics: UA-12240972-1
 show_excerpts: true
+plainwhite:
+  name: Alex Kovar
+  tagline: Software Engineer
+  date_format: "%b %-d, %Y"
+
+  social_links:
+    github: ajkovar
+    linkedIn: in/alex-kovar-b819518b # format: locale/username
