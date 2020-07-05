@@ -33,6 +33,7 @@ exclude:
 google_analytics: UA-12240972-1
 show_excerpts: true
 plainwhite:
+  analytics_id: UA-12240972-1
   name: Alex Kovar
   tagline: Software Engineer
   date_format: "%b %-d, %Y"
