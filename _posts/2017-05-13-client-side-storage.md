@@ -11,11 +11,4 @@ While it is only supported in modern browsers, I think this combination really c
 
 If you were to try to do this with a localstorage solution, you would get a blocking operation that would store it's data as a string serialized object.  This is obviously also not very performant for a large quantity of data, as it would have to reserialize the entire data structure any time it needed to perform a save.
 
-Additionally, you can use redux-storage with [react native async storage](https://github.com/react-stack/redux-storage-engine-reactNativeAsyncStorage), giving you a uniform way to persist state across platforms.  And even better, there are plugins available that allow you to do things such as perform automated migrations for databases.
-
-
-{% highlight javascript %}
-import _ from 'lodash';
-let result = _.isArray(a);
-{% endhighlight %}
-
+Additionally, you can use redux-storage with [react native async storage](https://github.com/react-stack/redux-storage-engine-reactNativeAsyncStorage), giving you a uniform way to persist state across platforms.  And even better, there are plugins available that allow you to do things such as perform automated migrations for databases. 
