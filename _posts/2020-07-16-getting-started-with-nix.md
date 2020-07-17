@@ -2,16 +2,16 @@
 layout: post
 title: "Nix - A Bumpy Takeoff"
 date: 2020-07-16
-categories: nix, haskell
+categories: nix haskell
 ---
 
-Today I tried playing around with [haskell](https://www.haskell.org/) to learn it a little bit better. It was not a smooth start. It seems most projects these days in the haskell ecosystem are moving towards using [nix](https://nixos.org/) as their package installer of choice.
+Today I tried playing around with [Haskell](https://www.haskell.org/) to learn it a little bit better. It was not a smooth start. It seems most projects these days in the haskell ecosystem are moving towards using [nix](https://nixos.org/) as their package installer of choice.
 
 I can see the motivations for this. A package manager that uses a purely functional deployment model fits nicely in line with the Haskell philosophy. It also makes some bold promises such as solving the problem of dependency hell, all the while producing packages that are more reliable, reproducable, and portable.
 
-This all seems great.  But like most things in life, it seems that it doesn't come without its own set of problems.  One of the main ones being that for for users of MacOS Catatalina. 
+This all seems great.  But like most things in life, it seems that it doesn't come without its own set of challenges.  One of the main ones (for the time being) is for users of MacOS Catalina. 
 
-With the arrival of Catalina, macOS now runs on a [read only system volume](https://support.apple.com/en-ca/HT210650) (Macintosh HD) that gets mounted on `/` .  A user writable second volume (Macintosh HD - Data) now also gets created and mounted at `/System/Volumes/Data`.  It then uses some magic combined with a new concept (brought in along with the arrival of Catalina) called *firmlinks* to combine these two volumes together to create what you see as your file system tree. You can read more about that (here)[https://derflounder.wordpress.com/2020/01/18/creating-root-level-directories-and-symbolic-links-on-macos-catalina/#:~:text=synthetic.conf%20is%20intended%20to,(8)%20during%20early%20sys%2D].
+With the arrival of Catalina, macOS now runs on a [read only system volume](https://support.apple.com/en-ca/HT210650) (Macintosh HD) that gets mounted on `/` .  A user writable second volume (Macintosh HD - Data) now also gets created and mounted at `/System/Volumes/Data`.  It then uses some magic combined with a new concept (brought in along with the arrival of Catalina) called *firmlinks* to combine these two volumes together to create what you see as your file system tree. You can read more about that [here](https://derflounder.wordpress.com/2020/01/18/creating-root-level-directories-and-symbolic-links-on-macos-catalina/#:~:text=synthetic.conf%20is%20intended%20to,(8)%20during%20early%20sys%2D).
 
 Why is this a problem?  Well, because Nix's architecture and support structures are centered around dropping packges into `/nix` directory that exists at that root level.  A root level that is now read only.  In fact, if you want to uninstall Nix (at least in the case of [single user installation](https://nixos.org/nix/manual/#sect-single-user-installation)), all you need to do is run `rm -rf /nix`.  Pretty nice that everything well compartmentalized like that.  Unfortunately, it just so happens that the location they choose to put everything is a bit complicated in this particular case.
 
@@ -24,7 +24,7 @@ Trying to install nix using the recommended command `sh <(curl -L https://nixos.
 
 Naturally, Nix offers [a variety of solutions](https://nixos.org/nix/manual/#sect-macos-installation) to this, however they all seem to have their own sets of drawbacks (especially if you don't have a [T2 chip](https://support.apple.com/en-us/HT208862) installed in your machine).  
 
-Initially, I found [this link](https://github.com/digitallyinduced/ihp/issues/93#issuecomment-639611313) (the third solution above) suggesting creating a directory and adding it to the `/etc/synthetic.conf` file.  Now what is the `/etc/synthetic.conf` file, you might be asking?  It's a new configuration file introduced along with Catalina.  What it does is basically allows you to tell macOS to create either directories on the root level that you can mount to or symlinks to other parts of the file system.  (You can see more information about this here.)[https://derflounder.wordpress.com/2020/01/18/creating-root-level-directories-and-symbolic-links-on-macos-catalina]  The solution in the aforementioned link is going the symlink route.
+Initially, I found [this link](https://github.com/digitallyinduced/ihp/issues/93#issuecomment-639611313) (the third solution above) suggesting creating a directory and adding it to the `/etc/synthetic.conf` file.  Now what is the `/etc/synthetic.conf` file, you might be asking?  It's a new configuration file introduced along with Catalina.  What it does is basically allows you to tell macOS to create either directories on the root level that you can mount to or symlinks to other parts of the file system.  [You can see more information about this here.](https://derflounder.wordpress.com/2020/01/18/creating-root-level-directories-and-symbolic-links-on-macos-catalina)  The solution in the aforementioned link is going the symlink route.
 
 This seemed to work and allowed me to successfully install nix.  However, upon running certain commands, I was running into this error:
 
@@ -38,7 +38,7 @@ After running find with -L argument to follow symbolic links, I found this 'conf
     find -L /nix "config.log"
     /nix/store/a88vjfyx4y3grkkvcil3bmkxnmglib9r-configured-ghcjs-src/ghc/config.log
 
-But it didn't provide very helpful either information unfortunately.  Upon reviewing the [above posted link to the nix manual]((https://nixos.org/nix/manual/#sect-macos-installation), I discovered that his option is actually not recommended for reasons that I was seeing.  Builds were likely to fail.  
+But it didn't provide very helpful either information unfortunately.  Upon reviewing the [above posted link to the nix manual](https://nixos.org/nix/manual/#sect-macos-installation), I discovered that his option is actually not recommended for reasons that I was seeing.  Builds were likely to fail.  
 
 And while the instructions provided other solutions, it didn't go very into detail about how to implement them.  I decided to go with the second solution and luckily I found [this post](https://www.gitmemory.com/issue/NixOS/nix/2925/535680573) which more or less walked through the process of manually adding a disk volume and preparing it for a nix installation.  It was written in ruby, but most of the instructions were just simple wrappers around shell commands.
 
