@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "useRef - more than just for elements"
-date:   2020-07-11 13:05:55 -0500
+date:   2020-07-15 13:05:55 -0500
 categories: javascript
 ---
 If you have played around with the relatively recently introduced react hooks at all, you might have wondered if it was possible to create a variable in one useEffect and reuse it in another and what the best way to do that would be.  The answer to this might not be so obvious but it turns out that [React](https://reactjs.org/) provides a way.
